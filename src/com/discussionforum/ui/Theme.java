@@ -83,6 +83,6 @@ public class Theme {
     
     // Button Styles
     public static final int BUTTON_HEIGHT = 45;
-    public static final int BUTTON_ARC = 12;
-    public static final int CARD_ARC = 16;
+    public static final int BUTTON_ARC = 25;  // More rounded buttons
+    public static final int CARD_ARC = 20;  // More rounded cards
 }

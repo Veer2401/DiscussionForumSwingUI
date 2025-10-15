@@ -53,6 +53,7 @@ public class PostPanel extends JPanel {
         titleLabel.setFont(Theme.FONT_SUBTITLE);
         titleLabel.setForeground(Theme.TEXT_PRIMARY);
         titleLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        titleLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         // Post content preview (truncated and styled)
         String contentPreview = post.content.length() > 150 ? 
@@ -67,21 +68,23 @@ public class PostPanel extends JPanel {
         contentArea.setWrapStyleWord(true);
         contentArea.setOpaque(true);
         contentArea.setBorder(BorderFactory.createEmptyBorder(8, 0, 8, 0));
+        contentArea.setFocusable(false);
+        contentArea.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         // Author and metadata panel
         JPanel metaPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
         metaPanel.setBackground(Theme.CARD_BACKGROUND);
         metaPanel.setOpaque(true);
 
-        JLabel authorIcon = new JLabel("👤 ");
-        authorIcon.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 12));
+        JLabel authorIcon = new JLabel("USER ");
+        authorIcon.setFont(new Font("Arial", Font.BOLD, 10));
 
         JLabel authorLabel = new JLabel("by " + post.author);
         authorLabel.setFont(Theme.FONT_SMALL);
         authorLabel.setForeground(Theme.TEXT_TERTIARY);
 
         // Comments count
-        JLabel commentsCount = new JLabel("  💬 " + post.comments.size() + " comments");
+        JLabel commentsCount = new JLabel("  " + post.comments.size() + " comments");
         commentsCount.setFont(Theme.FONT_SMALL);
         commentsCount.setForeground(Theme.TEXT_TERTIARY);
 
@@ -101,7 +104,7 @@ public class PostPanel extends JPanel {
         actionPanel.setBackground(Theme.CARD_BACKGROUND);
         actionPanel.setOpaque(true);
 
-        ModernButton viewBtn = new ModernButton("Read More →", 
+        ModernButton viewBtn = new ModernButton("Read >", 
             Theme.PRIMARY, Theme.PRIMARY_DARK, Theme.TEXT_LIGHT);
         viewBtn.setPreferredSize(new Dimension(120, 36));
         viewBtn.addActionListener(e -> parent.openPost(post.id));
@@ -116,7 +119,7 @@ public class PostPanel extends JPanel {
     }
 
     private void addInteraction() {
-        addMouseListener(new MouseAdapter() {
+        MouseAdapter clickHandler = new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
                 setBackground(Theme.HOVER_BACKGROUND);
@@ -133,7 +136,22 @@ public class PostPanel extends JPanel {
             public void mouseClicked(MouseEvent e) {
                 parent.openPost(post.id);
             }
-        });
+        };
+        
+        // Add mouse listener to the main panel
+        addMouseListener(clickHandler);
+        
+        // Add mouse listeners to all child components to ensure clicks work everywhere
+        addMouseListenerToChildren(this, clickHandler);
+    }
+    
+    private void addMouseListenerToChildren(Container container, MouseAdapter listener) {
+        for (Component component : container.getComponents()) {
+            if (component instanceof Container) {
+                addMouseListenerToChildren((Container) component, listener);
+            }
+            component.addMouseListener(listener);
+        }
     }
 
     private static class ModernCardBorder extends AbstractBorder {

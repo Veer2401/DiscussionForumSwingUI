@@ -3,6 +3,7 @@ package com.discussionforum.ui;
 import com.discussionforum.service.MockDataService;
 import com.discussionforum.ui.components.ModernButton;
 import com.discussionforum.ui.components.ModernTextField;
+import com.discussionforum.ui.components.IconUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -48,9 +49,7 @@ public class CreatePostFrame extends JFrame {
         header.setBackground(Theme.BACKGROUND);
 
         // App icon/logo placeholder
-        JLabel iconLabel = new JLabel("✏️");
-        iconLabel.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 56));
-        iconLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        JLabel iconLabel = IconUtils.createModernPostIcon();
 
         // Title
         JLabel titleLabel = new JLabel("Create New Post");
@@ -125,7 +124,7 @@ public class CreatePostFrame extends JFrame {
     }
 
     private JTextArea createModernTextArea() {
-        JTextArea textArea = new JTextArea();
+        JTextArea textArea = new JTextArea(4, 0);
         textArea.setFont(Theme.FONT_NORMAL);
         textArea.setBackground(Theme.CARD_BACKGROUND);
         textArea.setForeground(Theme.TEXT_PRIMARY);
@@ -169,7 +168,7 @@ public class CreatePostFrame extends JFrame {
         ModernButton backBtn = ModernButton.createSecondaryButton("Cancel");
         backBtn.setPreferredSize(new Dimension(120, Theme.BUTTON_HEIGHT));
 
-        ModernButton postBtn = ModernButton.createAccentButton("Publish Post");
+        ModernButton postBtn = ModernButton.createAccentButton("Publish");
         postBtn.setPreferredSize(new Dimension(140, Theme.BUTTON_HEIGHT));
 
         buttonPanel.add(Box.createHorizontalGlue());
@@ -183,12 +182,12 @@ public class CreatePostFrame extends JFrame {
             String content = getContentText().trim();
             
             if (title.isEmpty() || content.isEmpty()) {
-                showErrorMessage("Please fill in both title and content.");
+                showErrorMessage("Fill title and content");
                 return;
             }
             
             MockDataService.addPost(title, content);
-            showSuccessMessage("Post created successfully!");
+            showSuccessMessage("Post created!");
             Navigation.switchFrame(this, new DashboardFrame());
         });
 
