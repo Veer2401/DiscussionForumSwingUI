@@ -62,7 +62,7 @@ public class ModernPasswordField extends JPasswordField {
     private void hidePlaceholder() {
         showingPlaceholder = false;
         setText("");
-        setEchoChar('●'); // Hide password characters
+        setEchoChar('*'); // Hide password characters
         setForeground(Theme.TEXT_PRIMARY);
     }
 
@@ -87,7 +87,7 @@ public class ModernPasswordField extends JPasswordField {
             Graphics2D g2d = (Graphics2D) g.create();
             g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g2d.setColor(borderColor);
-            g2d.drawRoundRect(x, y, width - 1, height - 1, 8, 8);
+            g2d.drawRoundRect(x, y, width - 1, height - 1, 15, 15);
             g2d.dispose();
         }
 

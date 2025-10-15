@@ -51,7 +51,7 @@ public class PostViewFrame extends JFrame {
         header.setBackground(Theme.BACKGROUND);
         header.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
 
-        ModernButton backBtn = ModernButton.createSecondaryButton("← Back to Dashboard");
+        ModernButton backBtn = ModernButton.createSecondaryButton("Back");
         backBtn.setPreferredSize(new Dimension(180, 35));
         backBtn.addActionListener(e -> Navigation.switchFrame(this, new DashboardFrame()));
 
@@ -94,8 +94,8 @@ public class PostViewFrame extends JFrame {
         JPanel authorPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
         authorPanel.setBackground(Theme.CARD_BACKGROUND);
 
-        JLabel authorIcon = new JLabel("👤 ");
-        authorIcon.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 14));
+        JLabel authorIcon = new JLabel("USER ");
+        authorIcon.setFont(new Font("Arial", Font.BOLD, 12));
 
         JLabel authorLabel = new JLabel("by " + post.author);
         authorLabel.setFont(Theme.FONT_SMALL);
@@ -130,7 +130,7 @@ public class PostViewFrame extends JFrame {
         section.setBackground(Theme.BACKGROUND);
 
         // Comments header
-        JLabel commentsHeader = new JLabel("💬 Comments (" + MockDataService.getPostById(postId).comments.size() + ")");
+        JLabel commentsHeader = new JLabel("Comments (" + MockDataService.getPostById(postId).comments.size() + ")");
         commentsHeader.setFont(Theme.FONT_SUBTITLE);
         commentsHeader.setForeground(Theme.TEXT_PRIMARY);
 
@@ -157,31 +157,51 @@ public class PostViewFrame extends JFrame {
 
     private JPanel createAddCommentPanel() {
         JPanel container = new JPanel(new BorderLayout());
-        container.setBackground(Theme.CARD_BACKGROUND);
-        container.setBorder(Theme.CARD_BORDER);
+        container.setBackground(new Color(245, 248, 250));
+        container.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(0, 150, 0), 2),
+            BorderFactory.createEmptyBorder(12, 16, 12, 16)
+        ));
 
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.setBackground(Theme.CARD_BACKGROUND);
-        panel.setBorder(BorderFactory.createEmptyBorder(15, 20, 15, 20));
+        panel.setBackground(new Color(245, 248, 250));
+        panel.setOpaque(false);
 
         // Label
-        JLabel label = new JLabel("Add a comment");
+        JLabel label = new JLabel("Add comment");
         label.setFont(Theme.FONT_NORMAL);
         label.setForeground(Theme.TEXT_PRIMARY);
         label.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         // Comment text area
-        commentArea = new JTextArea(3, 0);
-        commentArea.setFont(Theme.FONT_NORMAL);
-        commentArea.setBackground(Theme.CARD_BACKGROUND);
-        commentArea.setForeground(Theme.TEXT_PRIMARY);
+        commentArea = new JTextArea(2, 0);
+        commentArea.setFont(new Font("Arial", Font.PLAIN, 13));
+        commentArea.setBackground(Color.WHITE);
+        commentArea.setForeground(Color.BLACK);
         commentArea.setLineWrap(true);
         commentArea.setWrapStyleWord(true);
         commentArea.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(220, 220, 220), 1),
+            BorderFactory.createLineBorder(new Color(0, 150, 0), 2),
             BorderFactory.createEmptyBorder(10, 10, 10, 10)
         ));
+        // Add placeholder text
+        commentArea.setText("Type comment...");
+        commentArea.setForeground(new Color(150, 150, 150));
+        commentArea.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                if (commentArea.getText().equals("Type comment...")) {
+                    commentArea.setText("");
+                    commentArea.setForeground(Color.BLACK);
+                }
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                if (commentArea.getText().trim().isEmpty()) {
+                    commentArea.setText("Type comment...");
+                    commentArea.setForeground(new Color(150, 150, 150));
+                }
+            }
+        });
 
         JScrollPane commentScrollPane = new JScrollPane(commentArea);
         commentScrollPane.setBorder(null);
@@ -189,31 +209,37 @@ public class PostViewFrame extends JFrame {
 
         // Button panel
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        buttonPanel.setBackground(Theme.CARD_BACKGROUND);
+        buttonPanel.setBackground(new Color(245, 248, 250));
+        buttonPanel.setOpaque(false);
 
-        ModernButton addCommentBtn = ModernButton.createPrimaryButton("Post Comment");
-        addCommentBtn.setPreferredSize(new Dimension(120, 35));
+        ModernButton addCommentBtn = ModernButton.createPrimaryButton("Post");
+        addCommentBtn.setPreferredSize(new Dimension(100, 40));
 
         buttonPanel.add(addCommentBtn);
         buttonPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         panel.add(label);
-        panel.add(Box.createVerticalStrut(8));
+        panel.add(Box.createVerticalStrut(6));
         panel.add(commentScrollPane);
-        panel.add(Box.createVerticalStrut(10));
+        panel.add(Box.createVerticalStrut(8));
         panel.add(buttonPanel);
 
         // Event listener
         addCommentBtn.addActionListener(e -> {
             String comment = commentArea.getText().trim();
-            if (!comment.isEmpty()) {
+            if (!comment.isEmpty() && !comment.equals("Type comment...")) {
                 MockDataService.addComment(postId, comment);
-                commentArea.setText("");
+                commentArea.setText("Type comment...");
+                commentArea.setForeground(new Color(150, 150, 150));
                 refreshComments();
-                // Refresh the comments section
-                refreshComments();
+                // Scroll to bottom to show new comment
+                SwingUtilities.invokeLater(() -> {
+                    JScrollPane scrollPane = (JScrollPane) commentsPanel.getParent().getParent();
+                    JScrollBar vertical = scrollPane.getVerticalScrollBar();
+                    vertical.setValue(vertical.getMaximum());
+                });
             } else {
-                JOptionPane.showMessageDialog(this, "Please enter a comment.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Enter a comment", "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
 
@@ -233,8 +259,8 @@ public class PostViewFrame extends JFrame {
             emptyPanel.setBackground(Theme.BACKGROUND);
             emptyPanel.setBorder(BorderFactory.createEmptyBorder(30, 20, 30, 20));
 
-            JLabel emptyIcon = new JLabel("💭");
-            emptyIcon.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 32));
+            JLabel emptyIcon = new JLabel("NO COMMENTS");
+            emptyIcon.setFont(new Font("Arial", Font.BOLD, 16));
             emptyIcon.setAlignmentX(Component.CENTER_ALIGNMENT);
 
             JLabel emptyText = new JLabel("No comments yet");
@@ -251,48 +277,55 @@ public class PostViewFrame extends JFrame {
             for (String comment : comments) {
                 JPanel commentPanel = createCommentPanel(comment);
                 commentsPanel.add(commentPanel);
-                commentsPanel.add(Box.createVerticalStrut(10));
+                commentsPanel.add(Box.createVerticalStrut(8));
             }
         }
 
+        // Force layout update
         commentsPanel.revalidate();
         commentsPanel.repaint();
+        
+        // Ensure the panel is visible
+        commentsPanel.setVisible(true);
     }
 
     private JPanel createCommentPanel(String comment) {
         JPanel container = new JPanel(new BorderLayout());
-        container.setBackground(Theme.CARD_BACKGROUND);
-        container.setBorder(new CommentBorder());
-        container.setMaximumSize(new Dimension(Integer.MAX_VALUE, container.getPreferredSize().height));
+        container.setBackground(new Color(220, 248, 198)); // Light green like WhatsApp
+        container.setBorder(BorderFactory.createEmptyBorder(6, 10, 6, 10));
+        container.setMaximumSize(new Dimension(Integer.MAX_VALUE, 150));
 
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.setBackground(Theme.CARD_BACKGROUND);
-        panel.setBorder(BorderFactory.createEmptyBorder(12, 15, 12, 15));
+        panel.setBackground(new Color(220, 248, 198));
+        panel.setOpaque(false);
 
-        // Comment author (using current user for now)
+        // Comment author and timestamp
         JPanel authorPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
-        authorPanel.setBackground(Theme.CARD_BACKGROUND);
-
-        JLabel authorIcon = new JLabel("👤 ");
-        authorIcon.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 12));
+        authorPanel.setBackground(new Color(220, 248, 198));
+        authorPanel.setOpaque(false);
 
         JLabel authorLabel = new JLabel(MockDataService.getCurrentUser().username);
-        authorLabel.setFont(Theme.FONT_SMALL);
-        authorLabel.setForeground(Theme.TEXT_SECONDARY);
+        authorLabel.setFont(new Font("Arial", Font.BOLD, 11));
+        authorLabel.setForeground(new Color(0, 100, 0));
 
-        authorPanel.add(authorIcon);
+        JLabel timeLabel = new JLabel(" • " + java.time.LocalTime.now().toString().substring(0, 5));
+        timeLabel.setFont(new Font("Arial", Font.PLAIN, 10));
+        timeLabel.setForeground(new Color(100, 100, 100));
+
         authorPanel.add(authorLabel);
+        authorPanel.add(timeLabel);
         authorPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        // Comment text
-        JLabel commentLabel = new JLabel("<html><div style='width: 400px;'>" + comment + "</div></html>");
-        commentLabel.setFont(Theme.FONT_NORMAL);
-        commentLabel.setForeground(Theme.TEXT_PRIMARY);
+        // Comment text with better formatting
+        JLabel commentLabel = new JLabel("<html><div style='width: 400px; word-wrap: break-word;'>" + 
+            comment.replace("\n", "<br/>") + "</div></html>");
+        commentLabel.setFont(new Font("Arial", Font.PLAIN, 13));
+        commentLabel.setForeground(Color.BLACK);
         commentLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         panel.add(authorPanel);
-        panel.add(Box.createVerticalStrut(5));
+        panel.add(Box.createVerticalStrut(3));
         panel.add(commentLabel);
 
         container.add(panel, BorderLayout.CENTER);

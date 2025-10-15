@@ -5,6 +5,7 @@ import com.discussionforum.service.MockDataService.Post;
 import com.discussionforum.ui.components.PostPanel;
 import com.discussionforum.ui.components.ModernButton;
 import com.discussionforum.ui.components.GradientPanel;
+import com.discussionforum.ui.components.IconUtils;
 
 import javax.swing.*;
 import java.awt.*; 
@@ -47,14 +48,13 @@ public class DashboardFrame extends JFrame {
         JPanel welcomePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         welcomePanel.setOpaque(false);
 
-        JLabel welcomeIcon = new JLabel("🎉 ");
-        welcomeIcon.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 28));
+        JLabel welcomeIcon = IconUtils.createWelcomeIcon(24);
 
-        JLabel welcomeLabel = new JLabel("Welcome back!");
+        JLabel welcomeLabel = new JLabel("Welcome!");
         welcomeLabel.setFont(Theme.FONT_TITLE);
         welcomeLabel.setForeground(Theme.TEXT_LIGHT);
 
-        JLabel subtitleLabel = new JLabel("Ready to share your thoughts?");
+        JLabel subtitleLabel = new JLabel("Share your thoughts");
         subtitleLabel.setFont(Theme.FONT_NORMAL);
         subtitleLabel.setForeground(new Color(255, 255, 255, 180));
 
@@ -90,8 +90,8 @@ public class DashboardFrame extends JFrame {
         JPanel postsHeader = new JPanel(new BorderLayout());
         postsHeader.setOpaque(false);
 
-        JLabel postsIcon = new JLabel("📋 ");
-        postsIcon.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 24));
+        JLabel postsIcon = new JLabel("POSTS ");
+        postsIcon.setFont(new Font("Arial", Font.BOLD, 16));
 
         JLabel postsTitle = new JLabel("Recent Discussions");
         postsTitle.setFont(Theme.FONT_SUBTITLE);
@@ -141,7 +141,7 @@ public class DashboardFrame extends JFrame {
         actionPanel.setOpaque(false);
         actionPanel.setBorder(BorderFactory.createEmptyBorder(20, 30, 30, 30));
 
-        ModernButton createPostBtn = new ModernButton("✨ Start New Discussion", 
+        ModernButton createPostBtn = new ModernButton("New Post", 
             Theme.ACCENT, Theme.ACCENT_DARK, Theme.TEXT_LIGHT);
         createPostBtn.setPreferredSize(new Dimension(220, Theme.BUTTON_HEIGHT));
         createPostBtn.addActionListener(e -> Navigation.switchFrame(this, new CreatePostFrame()));
@@ -178,8 +178,8 @@ public class DashboardFrame extends JFrame {
         emptyPanel.setOpaque(false);
         emptyPanel.setBorder(BorderFactory.createEmptyBorder(60, 50, 60, 50));
 
-        JLabel emptyIcon = new JLabel("🌟");
-        emptyIcon.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 72));
+        JLabel emptyIcon = new JLabel("NO POSTS");
+        emptyIcon.setFont(new Font("Arial", Font.BOLD, 24));
         emptyIcon.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JLabel emptyTitle = new JLabel("No discussions yet");
@@ -187,7 +187,7 @@ public class DashboardFrame extends JFrame {
         emptyTitle.setForeground(Theme.TEXT_PRIMARY);
         emptyTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JLabel emptySubtitle = new JLabel("Be the pioneer! Start the first conversation and inspire others.");
+        JLabel emptySubtitle = new JLabel("Start the first conversation");
         emptySubtitle.setFont(Theme.FONT_NORMAL);
         emptySubtitle.setForeground(Theme.TEXT_SECONDARY);
         emptySubtitle.setAlignmentX(Component.CENTER_ALIGNMENT);

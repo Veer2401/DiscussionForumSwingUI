@@ -4,6 +4,7 @@ import com.discussionforum.service.MockDataService;
 import com.discussionforum.ui.components.ModernButton;
 import com.discussionforum.ui.components.ModernTextField;
 import com.discussionforum.ui.components.ModernPasswordField;
+import com.discussionforum.ui.components.IconUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -49,9 +50,7 @@ public class RegisterFrame extends JFrame {
         header.setBackground(Theme.BACKGROUND);
 
         // App icon/logo placeholder
-        JLabel iconLabel = new JLabel("📝");
-        iconLabel.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 56));
-        iconLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        JLabel iconLabel = IconUtils.createModernRegisterIcon();
 
         // Title
         JLabel titleLabel = new JLabel("Create Your Account");
@@ -154,15 +153,15 @@ public class RegisterFrame extends JFrame {
             String confirm = new String(confirmField.getPassword()).trim();
 
             if (user.isEmpty() || pass.isEmpty() || confirm.isEmpty()) {
-                showErrorMessage("Please fill all fields.");
+                showErrorMessage("Fill all fields");
                 return;
             }
             if (!pass.equals(confirm)) {
-                showErrorMessage("Passwords do not match.");
+                showErrorMessage("Passwords don't match");
                 return;
             }
             if (MockDataService.register(user, pass)) {
-                showSuccessMessage("Registration successful! Please login.");
+                showSuccessMessage("Registration successful!");
                 Navigation.switchFrame(this, new LoginFrame());
             } else {
                 showErrorMessage("Username already exists.");

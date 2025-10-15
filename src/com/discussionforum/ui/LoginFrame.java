@@ -5,6 +5,7 @@ import com.discussionforum.ui.components.ModernButton;
 import com.discussionforum.ui.components.ModernTextField;
 import com.discussionforum.ui.components.ModernPasswordField;
 import com.discussionforum.ui.components.GradientPanel;
+import com.discussionforum.ui.components.IconUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -53,9 +54,7 @@ public class LoginFrame extends JFrame {
         header.setOpaque(false);
 
         // App icon/logo placeholder
-        JLabel iconLabel = new JLabel("💬");
-        iconLabel.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 68));
-        iconLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        JLabel iconLabel = IconUtils.createModernForumIcon();
 
         // Title
         JLabel titleLabel = new JLabel("Discussion Forum");

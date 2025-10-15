@@ -35,6 +35,9 @@ public class ModernButton extends JButton {
         setOpaque(true);
         setCursor(new Cursor(Cursor.HAND_CURSOR));
         
+        // Add padding for better text spacing
+        setBorder(BorderFactory.createEmptyBorder(12, 24, 12, 24));
+        
         // Set preferred size for consistent button height
         setPreferredSize(new Dimension(getPreferredSize().width, Theme.BUTTON_HEIGHT));
         
@@ -57,10 +60,22 @@ public class ModernButton extends JButton {
     protected void paintComponent(Graphics g) {
         Graphics2D g2d = (Graphics2D) g.create();
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         
-        // Paint rounded background
+        // Paint rounded background with shadow effect
+        int arc = Theme.BUTTON_ARC;
+        
+        // Add subtle shadow
+        g2d.setColor(new Color(0, 0, 0, 20));
+        g2d.fillRoundRect(2, 2, getWidth(), getHeight(), arc, arc);
+        
+        // Paint main button background
         g2d.setColor(getBackground());
-        g2d.fillRoundRect(0, 0, getWidth(), getHeight(), Theme.BUTTON_ARC, Theme.BUTTON_ARC);
+        g2d.fillRoundRect(0, 0, getWidth() - 2, getHeight() - 2, arc, arc);
+        
+        // Add subtle border
+        g2d.setColor(new Color(255, 255, 255, 50));
+        g2d.drawRoundRect(0, 0, getWidth() - 2, getHeight() - 2, arc, arc);
         
         g2d.dispose();
         super.paintComponent(g);
